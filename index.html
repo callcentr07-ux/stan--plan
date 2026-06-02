@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>План-стратегия · Станция Жизни</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1565C0;--blue-d:#0D47A1;--blue-lt:#42A5F5;--blue-pale:#E3F2FD;
+  --bg:#F0F5FF;--white:#fff;
+  --text:#0A1628;--muted:#5A7295;--border:#D6E6FF;
+  --done:#1B8A4A;--done-lt:#E8F5EE;--done-bd:#A8D5B8;
+  --prog:#1565C0;--prog-lt:#EAF1FF;--prog-bd:#AECBF5;
+  --plan-bd:#C8D8EE;
+  --warn:#C84B0A;--warn-lt:#FFF3EC;
+  --purple:#6A1B9A;--purple-lt:#F3E8FF;
+  --teal:#007A6B;--teal-lt:#E0F5F3;
+  --gold:#8B6500;--gold-lt:#FFF8E1;
+  --rep:#006979;--rep-lt:#E0F7FA;
+  --maps:#AD1457;--maps-lt:#FCE4EC;
+  --red:#C62828;
+  --sh1:0 2px 12px rgba(21,101,192,.07);
+  --sh2:0 8px 32px rgba(21,101,192,.13);
+  --sh3:0 20px 60px rgba(21,101,192,.18);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Onest',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+
+/* ══ PROGRESS BAR ══ */
+#prog{position:fixed;top:0;left:0;height:3px;width:0%;z-index:9999;border-radius:0 2px 2px 0;
+  background:linear-gradient(90deg,#1565C0,#42A5F5,#7C3AED,#42A5F5);background-size:300% auto;
+  animation:bgMove 3s linear infinite;transition:width .1s}
+@keyframes bgMove{from{background-position:0%}to{background-position:300%}}
+
+/* ══ HERO ══ */
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#0A2463 0%,#1565C0 50%,#1976D2 100%);color:#fff;padding:76px 0 88px}
+.hero-canvas{position:absolute;inset:0;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:56px 56px;animation:gridDrift 20s linear infinite}
+@keyframes gridDrift{from{background-position:0 0}to{background-position:56px 56px}}
+.hero-glow{position:absolute;top:-30%;left:-10%;width:70%;height:100%;background:radial-gradient(ellipse,rgba(255,255,255,.08) 0%,transparent 60%);animation:glowPulse 5s ease-in-out infinite alternate}
+@keyframes glowPulse{from{opacity:.6;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
+
+.container{max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+@media(max-width:700px){.container{padding:0 16px}}
+
+.hero-inner{position:relative;z-index:2}
+.brand-pill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:100px;padding:6px 18px 6px 8px;margin-bottom:26px;backdrop-filter:blur(10px);animation:fadeUp .5s ease both}
+.brand-icon{width:28px;height:28px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.brand-txt{font-size:11px;font-weight:700;letter-spacing:2px;color:#BBDEFB}
+.hero h1{font-family:'Unbounded',sans-serif;font-size:clamp(28px,4.2vw,58px);font-weight:900;line-height:1.06;letter-spacing:-2px;margin-bottom:18px;animation:fadeUp .55s ease .1s both}
+.hero h1 .l1{display:block;color:#fff}
+.hero h1 .l2{display:block;background:linear-gradient(90deg,#BBDEFB,#fff,#90CAF9,#BBDEFB);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimTxt 4s linear infinite}
+@keyframes shimTxt{from{background-position:0%}to{background-position:300%}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero p{font-size:15px;color:rgba(255,255,255,.72);max-width:680px;line-height:1.78;animation:fadeUp .55s ease .2s both}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px;animation:fadeUp .55s ease .3s both}
+@media(max-width:760px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:20px 18px;backdrop-filter:blur(14px);transition:transform .25s,box-shadow .25s;position:relative;overflow:hidden;cursor:default}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent)}
+.kpi:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.22)}
+.kpi-num{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:900;color:#fff;line-height:1}
+.kpi-unit{font-size:10px;font-weight:700;color:#90CAF9;margin-top:5px;letter-spacing:1px;text-transform:uppercase}
+.kpi-lbl{font-size:11px;color:rgba(255,255,255,.52);margin-top:7px}
+
+/* ══ YEAR BAR ══ */
+.year-bar{background:rgba(255,255,255,.9);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);box-shadow:0 2px 16px rgba(21,101,192,.06)}
+.year-bar-inner{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.year-tab{background:var(--blue-pale);border:1px solid var(--border);color:var(--muted);padding:8px 22px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Onest',sans-serif}
+.year-tab:hover{color:var(--blue);border-color:var(--blue-lt)}
+.year-tab.active{background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border-color:transparent;box-shadow:0 4px 16px rgba(21,101,192,.32)}
+.ybi{margin-left:auto;font-size:12px;color:var(--muted)}
+
+/* ══ LEGEND ══ */
+.legend{padding:14px 0;background:#fff;border-bottom:1px solid var(--border)}
+.legend-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;font-size:13px;color:var(--muted)}
+.lg{display:inline-flex;align-items:center;gap:7px}
+.lg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ══ SECTION TYPOGRAPHY ══ */
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--blue-lt);margin-bottom:8px}
+.sec-title{font-family:'Unbounded',sans-serif;font-size:clamp(20px,2.6vw,34px);font-weight:900;letter-spacing:-1px;line-height:1.1;color:var(--text)}
+.sec-sub{font-size:14px;color:var(--muted);margin-top:8px}
+.divider{width:36px;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-lt));border-radius:2px;margin-top:14px}
+.sec-head{margin-bottom:34px}
+
+/* ══ INTRO ══ */
+.intro{padding:56px 0 0}
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:44px 48px;position:relative;overflow:hidden;box-shadow:var(--sh2);transition:box-shadow .3s}
+.intro-card:hover{box-shadow:var(--sh3)}
+.intro-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#1565C0,#42A5F5,#7C3AED)}
+.intro-card::after{content:'';position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle,rgba(66,165,245,.07) 0%,transparent 70%);border-radius:50%}
+@media(max-width:700px){.intro-card{padding:28px 20px}}
+.i-ey{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--blue-lt);margin-bottom:10px}
+.intro-card h2{font-family:'Unbounded',sans-serif;font-size:clamp(17px,2.2vw,26px);font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:20px}
+.intro-card p{font-size:14.5px;line-height:1.8;color:#3D526A;margin-bottom:14px}
+.intro-quote{margin-top:26px;padding:22px 26px;background:linear-gradient(135deg,#EEF6FF,#E8F0FE);border-left:4px solid var(--blue-lt);border-radius:0 16px 16px 0}
+.intro-quote p{font-size:14px;line-height:1.8;color:#2E4260;margin:0}
+.intro-quote p+p{margin-top:12px}
+
+/* ══ LICENSE BLOCK ══ */
+.license-block{margin-top:28px;padding:30px 32px;background:linear-gradient(135deg,#FFFBEB,#FEF9E0);border:1.5px solid #F59E0B;border-radius:20px;position:relative;overflow:hidden}
+.license-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#F59E0B,#FBBF24,#F59E0B);background-size:200% auto;animation:bgMove 3s linear infinite}
+.license-block::after{content:'';position:absolute;bottom:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(circle,rgba(251,191,36,.1) 0%,transparent 70%);border-radius:50%}
+.lic-hdr{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.lic-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);border-radius:100px;padding:5px 14px;font-size:10px;font-weight:800;letter-spacing:2px;color:#92400E;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.lic-title{font-family:'Unbounded',sans-serif;font-size:clamp(13px,1.8vw,17px);font-weight:900;color:#78350F;line-height:1.25}
+.license-block p{font-size:14px;line-height:1.8;color:#6B3D00;margin-bottom:12px}
+.license-block p:last-of-type{margin-bottom:0}
+.lic-perks{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.lic-perk{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);border-radius:100px;font-size:12px;font-weight:700;color:#92400E;transition:background .2s,transform .2s;cursor:default}
+.lic-perk:hover{background:rgba(245,158,11,.18);transform:translateY(-2px)}
+.lic-note{margin-top:14px;font-size:12px;color:#B45309;opacity:.8}
+
+/* ══ DELIVERABLES ══ */
+.deliver{padding:48px 0 0}
+.deliver-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+@media(max-width:900px){.deliver-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.deliver-grid{grid-template-columns:1fr}}
+
+/* ── glass card effect ── */
+.dbox{background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px 20px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;box-shadow:var(--sh1)}
+.dbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-lt));transform:scaleX(0);transform-origin:left;transition:transform .35s ease;border-radius:20px 20px 0 0}
+.dbox:hover{transform:translateY(-6px);box-shadow:var(--sh3)}
+.dbox:hover::before{transform:scaleX(1)}
+/* floating shimmer on hover */
+.dbox::after{content:'';position:absolute;top:-60%;left:-60%;width:50%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.6) 50%,transparent 60%);transform:translateX(-100%) rotate(15deg);transition:transform .6s ease;pointer-events:none}
+.dbox:hover::after{transform:translateX(400%) rotate(15deg)}
+
+.dbox-ic{font-size:22px;margin-bottom:12px;display:block}
+.dbox-num{font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1;color:var(--blue)}
+.dbox-num small{font-size:12px;font-weight:700;color:var(--blue-lt)}
+.dbox-lbl{font-size:13px;font-weight:700;color:var(--text);margin-top:9px}
+.dbox-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+.dbox.d-wide{grid-column:span 2}
+@media(max-width:900px){.dbox.d-wide{grid-column:span 2}}
+@media(max-width:460px){.dbox.d-wide{grid-column:1}}
+.dbox.d-accent{background:linear-gradient(135deg,#EEF4FF,#E8F0FE);border-color:#C5D8F5}
+.dlist{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.dlist li{font-size:13px;color:#3D526A;padding-left:16px;position:relative;line-height:1.5}
+.dlist li::before{content:'—';position:absolute;left:0;color:var(--blue-lt);font-weight:700}
+.dlist.dl2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 16px}
+@media(max-width:600px){.dlist.dl2{grid-template-columns:1fr}}
+.dlist.dl2 li::before{content:'•'}
+.dlist.dl2 b{color:var(--blue);font-weight:800}
+.dbox-total{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;font-weight:800;color:var(--blue)}
+.dbox-domains{margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:3px 14px}
+@media(max-width:600px){.dbox-domains{grid-template-columns:1fr}}
+.dbox-domains a{font-size:11px;color:var(--blue);text-decoration:none;padding:2px 0;border-bottom:1px solid transparent;transition:border-color .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.dbox-domains a:hover{border-bottom-color:var(--blue-lt)}
+.deliver-note{font-size:12px;color:var(--muted);margin-top:18px;text-align:center}
+
+/* ══ SECTION ══ */
+.section{padding:56px 0}
+
+/* ══ MONTH CARDS ══ */
+.month{background:#fff;border:1px solid var(--border);border-radius:22px;margin-bottom:18px;overflow:hidden;box-shadow:var(--sh1);transition:box-shadow .3s,transform .25s}
+.month:hover{box-shadow:var(--sh3);transform:translateY(-2px)}
+
+.month.t-prep    .month-head{background:linear-gradient(135deg,#EEF4FF,#E3EDFD)}
+.month.t-launch  .month-head{background:linear-gradient(135deg,#ECFDF5,#D1FAE5)}
+.month.t-rep     .month-head{background:linear-gradient(135deg,#F0FDFA,#CCFBF1)}
+.month.t-glue    .month-head{background:linear-gradient(135deg,#FFFBEB,#FEF3C7)}
+.month.t-mass    .month-head{background:linear-gradient(135deg,#EEF4FF,#DBEAFE)}
+.month.t-maps    .month-head{background:linear-gradient(135deg,#FDF2F8,#FCE7F3)}
+.month.t-social  .month-head{background:linear-gradient(135deg,#FAF5FF,#EDE9FE)}
+.month.t-audit   .month-head{background:linear-gradient(135deg,#F0FDFA,#CCFBF1)}
+.month.t-authority .month-head{background:linear-gradient(135deg,#FFF7ED,#FFEDD5)}
+.month.t-region  .month-head{background:linear-gradient(135deg,#FFF1F2,#FFE4E6)}
+.month.t-trust   .month-head{background:linear-gradient(135deg,#F8FAFC,#F1F5F9)}
+.month.t-net     .month-head{background:linear-gradient(135deg,#EEF2FF,#E0E7FF)}
+.month.t-pbn     .month-head{background:linear-gradient(135deg,#FFF7ED,#FFEDD5)}
+
+.month-head{padding:22px 26px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+@media(max-width:700px){.month-head{padding:16px 16px;gap:10px}}
+.month-num{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:900;color:rgba(21,101,192,.2);min-width:40px;letter-spacing:-1px;line-height:1;flex-shrink:0}
+.month-info{flex:1;min-width:0}
+.month-name{font-size:16px;font-weight:800;color:var(--text);margin-bottom:2px;word-break:break-word}
+.month-period{font-size:12px;color:var(--muted);font-weight:600}
+.month-status{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:100px;font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.st-done{background:var(--done-lt);color:var(--done);border:1px solid var(--done-bd)}
+.st-prog{background:var(--prog-lt);color:var(--prog);border:1px solid var(--prog-bd)}
+.st-plan{background:#F3F7FB;color:var(--muted);border:1px solid var(--plan-bd)}
+
+.month-body{padding:22px 26px 20px}
+@media(max-width:700px){.month-body{padding:16px 16px 14px}}
+
+/* ══ TASKS ══ */
+.task{display:grid;grid-template-columns:26px 1fr auto auto;gap:12px;align-items:center;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--border);margin-bottom:8px;transition:background .2s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+/* task shimmer */
+.task::after{content:'';position:absolute;top:-50%;left:-50%;width:40%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.7) 50%,transparent 60%);transform:translateX(-100%);transition:transform .5s ease;pointer-events:none;border-radius:inherit}
+.task:hover{background:#fff;border-color:var(--blue-lt);box-shadow:0 4px 16px rgba(21,101,192,.1)}
+.task:hover::after{transform:translateX(450%)}
+@media(max-width:700px){
+  .task{grid-template-columns:26px 1fr;gap:10px}
+  .task-price,.task-date{grid-column:2;font-size:12px;color:var(--muted)}
+}
+.task.done{background:var(--done-lt);border-color:var(--done-bd)}
+.task-check{width:24px;height:24px;border:2px solid var(--plan-bd);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;font-size:12px;color:transparent;transition:all .2s;user-select:none;flex-shrink:0}
+.task-check:hover{border-color:var(--blue-lt);box-shadow:0 0 0 3px rgba(66,165,245,.15)}
+.task.done .task-check{background:var(--done);border-color:var(--done);color:#fff;box-shadow:0 0 12px rgba(27,138,74,.35)}
+.task-name{font-size:14px;font-weight:700;color:var(--text)}
+.task-sub{font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
+.task-tags{display:inline-flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.task-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.3px}
+.tag-glue{background:var(--gold-lt);color:var(--gold)}
+.tag-mass{background:var(--prog-lt);color:var(--prog)}
+.tag-social{background:var(--purple-lt);color:var(--purple)}
+.tag-auto{background:var(--teal-lt);color:var(--teal)}
+.tag-audit{background:var(--teal-lt);color:var(--teal)}
+.tag-pbn{background:var(--warn-lt);color:var(--warn)}
+.tag-rep{background:var(--rep-lt);color:var(--rep)}
+.tag-maps{background:var(--maps-lt);color:var(--maps)}
+.tag-net{background:#EEF2FF;color:#4338CA}
+.tag-net60{background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE}
+.task-price{font-size:13px;font-weight:800;color:var(--blue);white-space:nowrap}
+.task-date{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+
+/* ══ DETAILS ══ */
+.details{margin-top:-3px;padding:12px 16px 10px 16px;background:#FAFCFF;border-radius:0 0 14px 14px;border:1px solid var(--border);border-top:none;margin-bottom:8px;overflow:hidden}
+.details ul{list-style:none}
+.details li{font-size:13px;color:var(--text);padding:6px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px dashed rgba(21,101,192,.08);flex-wrap:nowrap}
+.details li:last-child{border-bottom:none;font-weight:800;padding-top:9px}
+.details li .lbl{color:var(--muted);font-weight:500;white-space:nowrap;flex-shrink:0;max-width:30%}
+.details li .val{color:var(--blue);font-weight:700;word-break:break-word;text-align:right;flex:1;min-width:0}
+.details li a{color:var(--blue);text-decoration:none;border-bottom:1px solid transparent}
+.details li a:hover{border-bottom-color:var(--blue-lt)}
+/* on very small screens stack label above value */
+@media(max-width:480px){
+  .details li{flex-direction:column;gap:2px;align-items:flex-start}
+  .details li .lbl{max-width:100%;white-space:normal;font-size:11px;opacity:.7}
+  .details li .val{text-align:left;font-size:13px}
+}
+
+.note-block{background:var(--warn-lt);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:12px 16px;margin-top:10px;font-size:12px;color:#4A1A00;line-height:1.6}
+.note-block b{color:var(--warn)}
+.note-block.info{background:var(--rep-lt);border-left-color:var(--rep);color:#003840}
+.note-block.info b{color:var(--rep)}
+
+.month-total{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding:16px 22px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border-radius:14px;font-size:13px;font-weight:700;gap:12px;flex-wrap:wrap;box-shadow:0 6px 22px rgba(21,101,192,.28)}
+.month-total .mt-val{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.5px}
+.month-total small{display:block;font-size:10px;opacity:.6;font-weight:500;margin-top:2px}
+
+/* ══ APPROVAL ══ */
+.approval{margin-top:20px;padding:18px 20px;border-radius:16px;background:var(--warn-lt);border:1.5px dashed rgba(200,75,10,.4);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.approval.approved{background:var(--done-lt);border-style:solid;border-color:var(--done-bd)}
+.approval-text{font-size:13px;font-weight:700;color:var(--warn)}
+.approval.approved .approval-text{color:var(--done)}
+.approval-text small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:3px}
+.approval-btn{background:linear-gradient(135deg,#C84B0A,#A83808);color:#fff;border:none;padding:12px 26px;border-radius:100px;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:transform .15s,box-shadow .2s;box-shadow:0 4px 14px rgba(200,75,10,.3);font-family:'Onest',sans-serif;position:relative;overflow:hidden}
+.approval-btn::after{content:'';position:absolute;top:-50%;left:-50%;width:40%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);transform:translateX(-100%);transition:transform .5s ease}
+.approval-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(200,75,10,.4)}
+.approval-btn:hover::after{transform:translateX(400%)}
+.approval-btn:disabled{opacity:.5;cursor:default;transform:none}
+.approval.approved .approval-btn{background:linear-gradient(135deg,#1B8A4A,#166838);box-shadow:0 4px 14px rgba(27,138,74,.3)}
+
+/* ══ SUMMARY ══ */
+.summary{background:linear-gradient(135deg,#0A2463 0%,#1565C0 55%,#1976D2 100%);padding:64px 0;position:relative;overflow:hidden}
+.summary::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:52px 52px}
+.summary::after{content:'';position:absolute;top:-120px;right:-120px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 65%);border-radius:50%}
+.summary .sec-title{color:#fff}
+.summary .sec-sub{color:rgba(255,255,255,.52)}
+.summary .divider{background:rgba(255,255,255,.28)}
+.summary .eyebrow{color:rgba(255,255,255,.38)}
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+@media(max-width:760px){.sum-grid{grid-template-columns:repeat(2,1fr)}}
+.sum-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:24px 20px;position:relative;overflow:hidden;backdrop-filter:blur(10px);transition:transform .25s,background .25s}
+.sum-box::after{content:'';position:absolute;top:-50%;left:-50%;width:40%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);transform:translateX(-100%);transition:transform .6s ease}
+.sum-box:hover{transform:translateY(-4px);background:rgba(255,255,255,.16)}
+.sum-box:hover::after{transform:translateX(400%)}
+.sum-stripe{position:absolute;top:0;left:0;width:100%;height:3px}
+.sum-num{font-family:'Unbounded',sans-serif;font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1;color:#fff}
+.sum-unit{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:1px;text-transform:uppercase}
+.sum-lbl{font-size:12px;color:rgba(255,255,255,.4);margin-top:10px}
+
+/* ══ RESET / FOOTER ══ */
+.reset-bar{text-align:center;padding:28px 0 50px}
+.reset-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s;font-family:'Onest',sans-serif}
+.reset-btn:hover{color:var(--red);border-color:var(--red)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:14px 22px;border-radius:14px;font-size:13px;font-weight:700;box-shadow:0 10px 36px rgba(0,0,0,.18);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;z-index:1000;max-width:340px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:var(--done)}
+.toast.error{background:var(--red)}
+.footer{background:#fff;border-top:1px solid var(--border);padding:22px 32px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);flex-wrap:wrap;gap:10px;position:relative;z-index:1}
+.footer strong{color:var(--text)}
+.year-block{display:none}
+.year-block.active{display:block}
+
+/* ══ SCROLL FADE ══ */
+.fi{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease}
+.fi.vis{opacity:1;transform:translateY(0)}
+
+/* ══ FLOATING PARTICLES (CSS only) ══ */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.p{position:absolute;border-radius:50%;background:rgba(255,255,255,.18);animation:pFloat linear infinite}
+@keyframes pFloat{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:.6}100%{transform:translateY(-10vh) scale(1.2);opacity:0}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-canvas">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="particles" id="particles"></div>
+  </div>
+  <div class="container hero-inner">
+    <div class="brand-pill"><span class="brand-icon">🏥</span><span class="brand-txt">СТАНЦИЯ ЖИЗНИ · СПБ</span></div>
+    <h1><span class="l1">План-стратегия</span><span class="l2">продвижения и развития</span></h1>
+    <p>Поэтапный план работ по развитию и продвижению проекта: SEO, репутация, карточки организаций, поддомены, ссылочный профиль, автопостинг, картографические сервисы и PBN-сети. Этапы по май&nbsp;2026 выполнены; начиная с июня каждый период проходит согласование клиента.</p>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-num">6</div><div class="kpi-unit">Этапов</div><div class="kpi-lbl">Массовых SEO-закупок</div></div>
+      <div class="kpi"><div class="kpi-num">60</div><div class="kpi-unit">Поддоменов</div><div class="kpi-lbl">К сентябрю 2026</div></div>
+      <div class="kpi"><div class="kpi-num">30</div><div class="kpi-unit">Google-карт</div><div class="kpi-lbl">3 волны · 10 городов</div></div>
+      <div class="kpi"><div class="kpi-num">640K+</div><div class="kpi-unit">Размещений</div><div class="kpi-lbl">Ссылки и каталоги</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="year-bar">
+  <div class="container year-bar-inner">
+    <button class="year-tab active" data-year="2026">2026</button>
+    <button class="year-tab" data-year="2027">2027</button>
+    <button class="year-tab" data-year="2028">2028</button>
+    <div class="ybi">Переключайтесь между годами →</div>
+  </div>
+</div>
+<div class="legend">
+  <div class="container legend-inner">
+    <span class="lg"><span class="lg-dot" style="background:var(--done)"></span>Выполнено</span>
+    <span class="lg"><span class="lg-dot" style="background:var(--prog)"></span>В работе</span>
+    <span class="lg"><span class="lg-dot" style="background:var(--plan-bd)"></span>Запланировано</span>
+    <span>·</span>
+    <span>С июня 2026 — требуется согласование клиента</span>
+  </div>
+</div>
+
+<!-- ══ INTRO ══ -->
+<section class="intro">
+  <div class="container">
+    <div class="intro-card fi">
+      <div class="i-ey">О документе</div>
+      <h2>Стратегия развития и продвижения проекта</h2>
+      <p>Данный документ содержит поэтапный план работ по развитию и продвижению проекта. Стратегия сформирована на основании анализа ниши, конкурентной среды, текущего состояния проекта и практического опыта работы в данной тематике.</p>
+      <p>В рамках реализации стратегии могут использоваться различные инструменты интернет-маркетинга: SEO-продвижение, управление репутацией, развитие карточек организаций, работа с поддоменами и дополнительными сайтами, развитие ссылочного профиля, автоматизация публикаций, картографические сервисы, PBN-сети и другие направления.</p>
+      <p>План носит стратегический характер. Этапность, приоритетность и состав мероприятий могут корректироваться в процессе работы в зависимости от изменений алгоритмов, действий конкурентов и результатов анализа.</p>
+      <div class="intro-quote">
+        <p>«Следует учитывать, что развитие проекта зависит не только от маркетинговых и технических мероприятий, но и от ряда факторов, находящихся в зоне ответственности Заказчика — включая качество услуг, работу с клиентами, кадровый состав, лицензирование, развитие бренда, получение отзывов и другие аспекты деятельности.</p>
+        <p>При выявлении дополнительных точек роста соответствующие рекомендации будут предоставляться Заказчику отдельно в рабочем порядке.</p>
+      </div>
+      <!-- ЛИЦЕНЗИРОВАНИЕ -->
+      <div class="license-block">
+        <div class="lic-hdr">
+          <span class="lic-badge">⭐ Приоритет клиента</span>
+          <div class="lic-title">Лицензирование деятельности — стратегический шаг роста</div>
+        </div>
+        <p>Одна из приоритетнейших задач на стороне Заказчика — <strong>получение лицензии на осуществление деятельности по адресу предоставления услуг</strong>. Это не просто формальность — это мощнейший инструмент роста.</p>
+        <p>Наличие лицензии открывает рекламные каналы, которые сейчас закрыты: <strong>Яндекс.Директ</strong>, реклама в <strong>Яндекс.Бизнесе</strong> и другие платные источники трафика, работающие в медицинской нише строго при наличии лицензии. Кроме того, лицензия — гарант реальности, безопасности и профессионализма клиники в глазах пациентов.</p>
+        <div class="lic-perks">
+          <span class="lic-perk">📢 Яндекс.Директ</span>
+          <span class="lic-perk">📍 Яндекс.Бизнес</span>
+          <span class="lic-perk">🛡️ Доверие пациентов</span>
+          <span class="lic-perk">📈 Новые рекламные каналы</span>
+          <span class="lic-perk">✅ Гарант легальности</span>
+        </div>
+        <p class="lic-note">⚡ Задача выполняется параллельно нашей работе и не блокирует ни один этап плана — но её реализация кратно усилит конечный эффект всей стратегии.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DELIVERABLES ══ -->
+<section class="deliver">
+  <div class="container">
+    <div class="sec-head fi">
+      <div class="eyebrow">Результат</div>
+      <div class="sec-title">Что будет сделано по итогу</div>
+      <div class="sec-sub">Совокупный объём работ за весь период реализации стратегии</div>
+      <div class="divider"></div>
+    </div>
+    <div class="deliver-grid">
+      <div class="dbox d-wide fi"><span class="dbox-ic">🛠️</span><div class="dbox-lbl">Фундамент проекта</div><ul class="dlist"><li>выполнен редизайн проекта</li><li>проведён переезд со старого домена bystromed-spb.ru</li><li>ускорен сайт</li><li>расширено ядро запросов</li><li>проработаны страницы врачей и E-E-A-T факторы</li><li>проведена работа над доверием и экспертностью проекта</li></ul></div>
+      <div class="dbox d-wide fi"><span class="dbox-ic">🌐</span><div class="dbox-num">60 <small>поддоменов</small></div><div class="dbox-lbl">Расширение по городам и районам</div><div class="dbox-sub" style="margin-bottom:8px">Сейчас: 30 активных · <strong style="color:var(--blue)">к сентябрю 2026 — расширение до 60</strong></div><div class="dbox-domains" id="dbox-domains"></div></div>
+      <div class="dbox fi"><span class="dbox-ic">📍</span><div class="dbox-num">31 <small>карта</small></div><div class="dbox-lbl">Google-карты</div><div class="dbox-sub">по городам присутствия</div></div>
+      <div class="dbox fi"><span class="dbox-ic">⭐</span><div class="dbox-num">Яндекс</div><div class="dbox-lbl">Яндекс.Карты + отзывы</div><div class="dbox-sub">карточка организации и наполнение отзывами</div></div>
+      <div class="dbox fi"><span class="dbox-ic">🗂️</span><div class="dbox-num" style="font-size:18px">2ГИС · Yell · ZOON</div><div class="dbox-lbl">Карточки в справочниках</div><div class="dbox-sub">размещение и работа с отзывами</div></div>
+      <div class="dbox fi"><span class="dbox-ic">🔁</span><div class="dbox-num">19 <small>шт.</small></div><div class="dbox-lbl">Многоуровневые редиректы</div><div class="dbox-sub">9 сделано + 10 в плане · подклейка с 301</div></div>
+      <div class="dbox fi"><span class="dbox-ic">✍️</span><div class="dbox-num">200+ <small>публ.</small></div><div class="dbox-lbl">Автопостинг</div><div class="dbox-sub">регулярные публикации по графику</div></div>
+      <div class="dbox d-wide d-accent fi"><span class="dbox-ic">🔗</span><div class="dbox-num">640 000+ <small>размещений</small></div><div class="dbox-lbl">Ссылки и каталоги на все 31 сайт</div><div class="dbox-sub" style="margin-bottom:10px">6 закупочных этапов: «Выход в космос», «Полный захват», «Социальный взрыв», «Авторитет и масштаб», «Региональное доминирование», «Трастовая крепость»</div><ul class="dlist dl2"><li>Профильные — <b>9 300</b></li><li>Крауд-ссылки — <b>4 650</b></li><li>Статьи (рекламные, нишевые, экспертные) — <b>48 205</b></li><li>Естественные — <b>7 440</b></li><li>Ультра-качество — <b>4 650</b></li><li>EDU / GOV / WIKI (вечные) — <b>6 882</b></li><li>VIP-ссылки — <b>4 650</b></li><li>Соц. сигналы — <b>52 080</b></li><li>Сабмиты — <b>3 100</b></li><li>Регистрации в справочниках — <b>3 720</b></li><li>Каталоги — <b>496 000</b></li></ul><div class="dbox-total">≈ 144 700 ссылок + 496 000 каталогов</div></div>
+      <div class="dbox fi"><span class="dbox-ic">🛡️</span><div class="dbox-num">PBN</div><div class="dbox-lbl">Сети траста (PBN)</div><div class="dbox-sub">аренда ссылок с 2027 года и далее на постоянной основе</div></div>
+    </div>
+    <div class="deliver-note">Объёмы рассчитаны по составу закупочных пакетов и являются ориентировочными — итоговые значения могут уточняться в процессе работы.</div>
+  </div>
+</section>
+
+<!-- ══ PLAN ══ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-head fi">
+      <div class="eyebrow">Хронология</div>
+      <div class="sec-title">Помесячный план</div>
+      <div class="sec-sub">Выполнено по май 2026 · согласование — с июня 2026</div>
+      <div class="divider"></div>
+    </div>
+    <div id="plan-root"></div>
+  </div>
+</section>
+
+<!-- ══ SUMMARY ══ -->
+<section class="summary">
+  <div class="container">
+    <div class="sec-head fi">
+      <div class="eyebrow">Итог</div>
+      <div class="sec-title">По всей стратегии</div>
+      <div class="sec-sub">Продвижение для <strong style="color:rgba(255,255,255,.6)">станцияжизни.рф</strong> и сети районных поддоменов</div>
+      <div class="divider"></div>
+    </div>
+    <div class="sum-grid">
+      <div class="sum-box fi"><div class="sum-stripe" style="background:#42A5F5"></div><div class="sum-num">6</div><div class="sum-unit">этапов</div><div class="sum-lbl">Массовых SEO-закупок</div></div>
+      <div class="sum-box fi"><div class="sum-stripe" style="background:#90CAF9"></div><div class="sum-num">61</div><div class="sum-unit">проект</div><div class="sum-lbl">Основной + 60 поддоменов</div></div>
+      <div class="sum-box fi"><div class="sum-stripe" style="background:#F48FB1"></div><div class="sum-num">30</div><div class="sum-unit">Google-карт</div><div class="sum-lbl">3 волны по 10 городов</div></div>
+      <div class="sum-box fi"><div class="sum-stripe" style="background:#A5D6A7"></div><div class="sum-num">~150K</div><div class="sum-unit">ссылок</div><div class="sum-lbl">Совокупный ссылочный профиль</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="reset-bar"><button class="reset-btn" onclick="resetAll()">↻ Сбросить все статусы и согласования</button></div>
+<footer class="footer"><div><strong>🏥 Станция Жизни</strong> · Наркологический центр · Санкт-Петербург</div><div>План-стратегия 2025–2028 · обновляется в реальном времени</div></footer>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ── PARTICLES ── */
+(function(){
+  const wrap=document.getElementById('particles');
+  const sizes=[4,5,6,7,8,10];
+  const durations=[8,10,12,14,16,18,20];
+  for(let i=0;i<22;i++){
+    const d=document.createElement('div');
+    d.className='p';
+    const s=sizes[Math.floor(Math.random()*sizes.length)];
+    const dur=durations[Math.floor(Math.random()*durations.length)];
+    const left=Math.random()*100;
+    const delay=Math.random()*dur;
+    d.style.cssText=`width:${s}px;height:${s}px;left:${left}%;bottom:-10%;animation-duration:${dur}s;animation-delay:-${delay}s`;
+    wrap.appendChild(d);
+  }
+})();
+
+/* ── PROGRESS ── */
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  document.getElementById('prog').style.width=((d.scrollTop/(d.scrollHeight-d.clientHeight))*100)+'%';
+});
+
+/* ── SCROLL OBSERVER ── */
+function initObs(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
+  },{threshold:.06});
+  document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+}
+
+/* ── DATA ── */
+const NOTIFY={telegram:{enabled:false,botToken:'ВСТАВЬТЕ_ТОКЕН_БОТА',chatId:'ВСТАВЬТЕ_CHAT_ID'},email:{enabled:false,endpoint:'https://formspree.io/f/ВАШ_ID'}};
+function gluePairs(){return[['site1.ru →301→ site2.ru →301→','/vyzov-narkologa/ · 20 300 ₽'],['site3.ru →301→ site4.ru →301→','/vyzov-narkologa/ · 20 300 ₽'],['site5.ru →301→ site6.ru →301→','/vyzov-narkologa/ · 20 300 ₽'],['site7.ru →301→ site8.ru →301→','/vyzov-narkologa/ · 20 300 ₽'],['site9.ru →301→ site10.ru →301→','/vyzov-narkologa/ · 20 300 ₽']];}
+const PLAN={
+'2026':[
+  {num:1,title:'Подготовка проекта',period:'Декабрь 2025 – Февраль 2026',type:'prep',done:true,approval:false,tasks:[
+    {id:'p1',name:'Редизайн и переезд основного сайта',sub:'Переезд с bystromed-spb.ru, ускорение, расширение ядра',date:'Дек 25 – Янв 26',price:'—',defaultDone:true},
+    {id:'p2',name:'Работа над E-E-A-T и доверием',sub:'Страницы врачей, лицензии, отзывы, экспертность',date:'Янв 2026',price:'—',defaultDone:true},
+    {id:'p3',name:'Запуск 30 районных сайтов и поддоменов',sub:'1 город = 1 сайт — стандарт ТОПов',date:'Февр 2026',price:'—',defaultDone:true,details:[['Северные','Агалатово, Всеволожск, Колтуши, Кудрово, Мурино, Сертолово, Токсово, Янино'],['Приморские','Белоостров, Зеленогорск, Кронштадт, Лисий Нос, Репино, Рощино, Сестрорецк, Сосново'],['Южные и пригороды','Гатчина, Колпино, Красное Село, Ломоносов, Павловск, Петергоф, Пушкин, Стрельна, Шушары'],['Прочие','Лескалово, Новоселье, Парголово, Песочный, Шлиссельбург'],['ИТОГО','30 районных сайтов']]}
+  ]},
+  {num:2,title:'Этап 01 · «Выход в космос»',period:'Март 2026',type:'launch',done:true,approval:false,tasks:[
+    {id:'m01',name:'SEO-закупка: Выход в космос',sub:'Стартовая база — максимум эффекта и рост траста',date:'Март 2026',price:'16 400 ₽',priceVal:16400,defaultDone:true,tags:[['mass','Массовая закупка']],details:[['Регистрации','40 справочников'],['Крауд-ссылки','25 ссылок'],['Профильные','150 ссылок'],['Статьи','30 ссылок'],['Естественные','70 ссылок'],['Каталоги','+4 000 размещений'],['ИТОГО','315 ссылок + 4 000 каталогов']]}
+  ]},
+  {num:3,title:'Создание карточек организации',period:'Апрель 2026',type:'rep',done:true,approval:false,tasks:[
+    {id:'apr-cards',name:'Создание карточек на картах и в справочниках',sub:'Размещение клиники на ключевых площадках-агрегаторах',date:'Апрель 2026',price:'—',defaultDone:true,tags:[['rep','Репутация']],details:[['Яндекс.Карты','<a href="https://yandex.ru/profile/24988984719" target="_blank" rel="noopener">профиль</a> · на обслуживании'],['Google','<a href="https://share.google/PCJE4fPpHRmdQwhBk" target="_blank" rel="noopener">карточка</a>'],['ZOON','<a href="https://zoon.ru/spb/medical/narkologicheskaya_klinika_stantsiya_zhizni/" target="_blank" rel="noopener">страница</a>'],['2ГИС','<a href="https://2gis.ru/spb/firm/70000001114107043" target="_blank" rel="noopener">карточка</a>'],['Yell','<a href="https://www.yell.ru/spb/com/narkologicheskaya-klinika-stanciya-zhizni_14515477/" target="_blank" rel="noopener">страница</a>'],['ИТОГО','5 карточек организации']]}
+  ]},
+  {num:4,title:'Работа с репутацией · отзывы',period:'Май 2026',type:'rep',done:true,approval:false,tasks:[
+    {id:'may-rev',name:'Заказ отзывов на созданные карточки',sub:'Наполнение площадок реальными отзывами',date:'Май 2026',price:'—',defaultDone:true,tags:[['rep','Репутация']],details:[['Яндекс','30 отзывов'],['Google','4 отзыва'],['2ГИС','12 отзывов'],['ZOON','16 отзывов'],['Yell','4 отзыва'],['ИТОГО','66 отзывов']],note:'info|Отзывы — это вопрос репутации и прямая помощь потенциальным клиентам в принятии решения. Когда человек выбирает клинику в трудной ситуации, живые отзывы на картах и в справочниках формируют доверие и подталкивают к обращению именно к нам.'}
+  ]},
+  {num:5,title:'Подклейки + Автопостинг',period:'Июнь 2026',type:'glue',done:false,approval:true,tasks:[
+    {id:'jun-glue',name:'Подклейка сайтов с многоуровневым редиректом',sub:'5 сайтов · 301-редирект на /vyzov-narkologa/ · 20 300 ₽ за сайт',date:'Июнь 2026',price:'101 500 ₽',priceVal:101500,defaultDone:false,tags:[['glue','Подклейки']],details:gluePairs().concat([['ИТОГО подклейки','5 × 20 300 = 101 500 ₽']])},
+    {id:'jun-auto',name:'Автопостинг на 3 месяца',sub:'Июнь — 10, Июль — 10, Август — 10 публикаций',date:'Июнь–Авг 2026',price:'31 200 ₽',priceVal:31200,defaultDone:false,tags:[['auto','Автопостинг']],details:[['Июнь','10 публикаций'],['Июль','10 публикаций'],['Август','10 публикаций'],['ИТОГО','30 публикаций · 31 200 ₽']]}
+  ]},
+  {num:6,title:'Этап 02 · «Полный захват»',period:'Июль – Август 2026',type:'mass',done:false,approval:true,tasks:[
+    {id:'m02',name:'SEO-закупка: Полный захват',sub:'Продвинутая SEO-атака для доминирования · 31 820 ₽ × 31 проект',date:'Июль–Авг 2026',price:'986 420 ₽',priceVal:986420,defaultDone:false,tags:[['mass','Массовая закупка']],details:[['Профильные','150 ссылок'],['Ультра-качество','100 премиальных'],['Естественные','70 ссылок'],['EDU и WIKI','7в1 + 65 вечных'],['Крауд-ссылки','25 ссылок'],['Каталоги','+4 000 размещений'],['Статьи','150 ссылок'],['На 1 проект','730 ссылок + 4 000 каталогов'],['Стоимость за проект','31 820 ₽'],['Проектов','× 31'],['ИТОГО за период','986 420 ₽']],note:'Окончательная цена зависит от способа оплаты'}
+  ]},
+  {num:7,title:'Подклейки + Автопостинг + Расширение сети',period:'Сентябрь 2026',type:'glue',done:false,approval:true,tasks:[
+    {id:'sep-glue',name:'Подклейка сайтов с многоуровневым редиректом',sub:'5 сайтов · 301-редирект на /vyzov-narkologa/ · 20 300 ₽ за сайт',date:'Сентябрь 2026',price:'101 500 ₽',priceVal:101500,defaultDone:false,tags:[['glue','Подклейки']],details:gluePairs().concat([['ИТОГО подклейки','5 × 20 300 = 101 500 ₽']])},
+    {id:'sep-auto',name:'Автопостинг на 3 месяца',sub:'Сентябрь — 10, Октябрь — 10, Ноябрь — 10 публикаций',date:'Сент–Нояб 2026',price:'31 200 ₽',priceVal:31200,defaultDone:false,tags:[['auto','Автопостинг']],details:[['Сентябрь','10 публикаций'],['Октябрь','10 публикаций'],['Ноябрь','10 публикаций'],['ИТОГО','30 публикаций · 31 200 ₽']]},
+    {id:'sep-net60',name:'Расширение сети поддоменов до 60',sub:'Удвоение сети — запуск ещё 30 районных поддоменов по Ленинградской области',date:'Сентябрь 2026',price:'—',defaultDone:false,tags:[['net','Сеть поддоменов'],['net60','× 2 расширение']],note:'info|Сейчас работают 30 поддоменов. В сентябре 2026 сеть расширяется до 60 — охват новых районов и городов области. Каждый новый поддомен получает отдельную страницу под соответствующий геозапрос, что кратно увеличивает покрытие поискового спроса по всей Ленинградской области.'}
+  ]},
+  {num:8,title:'Google-карты · 1 волна',period:'Октябрь 2026',type:'maps',done:false,approval:true,tasks:[
+    {id:'oct-maps',name:'Создание Google-карт по городам',sub:'10 городов · 31 200 ₽ за город',date:'Октябрь 2026',price:'312 000 ₽',priceVal:312000,defaultDone:false,tags:[['maps','Google-карты']],details:[['Городов','10'],['Стоимость за город','31 200 ₽'],['ИТОГО','312 000 ₽']]}
+  ]},
+  {num:9,title:'Этап 03 · «Социальный взрыв»',period:'Ноябрь – Декабрь 2026',type:'social',done:false,approval:true,tasks:[
+    {id:'m03',name:'SEO-закупка: Социальный взрыв',sub:'Охват через соцсети и рекламный контент · 26 500 ₽ × 31 проект',date:'Нояб–Дек 2026',price:'821 500 ₽',priceVal:821500,defaultDone:false,tags:[['mass','Массовая закупка']],details:[['Крауд-ссылки','25 ссылок'],['Статьи','300 ссылок'],['Рекламные статьи','125 ссылок'],['Сабмиты','100 ссылок'],['Соц. сигналы','680 ссылок'],['На 1 проект','1 230 ссылок'],['Стоимость за проект','26 500 ₽'],['Проектов','× 31'],['ИТОГО за период','821 500 ₽']],note:'Окончательная цена зависит от способа оплаты'},
+    {id:'dec-auto',name:'Автопостинг на 6 месяцев',sub:'Старт в декабре · по 4 публикации в месяц',date:'Дек 2026 – Май 2027',price:'31 200 ₽',priceVal:31200,defaultDone:false,tags:[['auto','Автопостинг']],details:[['Декабрь 2026','4 публикации'],['Январь 2027','4 публикации'],['Февраль 2027','4 публикации'],['Март 2027','4 публикации'],['Апрель 2027','4 публикации'],['Май 2027','4 публикации'],['ИТОГО','24 публикации · 31 200 ₽']]}
+  ]}
+],
+'2027':[
+  {num:10,title:'Google-карты · 2 волна',period:'Январь 2027',type:'maps',done:false,approval:true,tasks:[{id:'jan-maps',name:'Создание Google-карт по городам',sub:'10 городов',date:'Январь 2027',price:'312 000 ₽',priceVal:312000,defaultDone:false,tags:[['maps','Google-карты']],details:[['Городов','10'],['Стоимость за город','31 200 ₽'],['ИТОГО','312 000 ₽']]}]},
+  {num:11,title:'Google-карты · 3 волна',period:'Февраль 2027',type:'maps',done:false,approval:true,tasks:[{id:'feb-maps',name:'Создание Google-карт по городам',sub:'10 городов',date:'Февраль 2027',price:'312 000 ₽',priceVal:312000,defaultDone:false,tags:[['maps','Google-карты']],details:[['Городов','10'],['Стоимость за город','31 200 ₽'],['ИТОГО','312 000 ₽']]}]},
+  {num:12,title:'Этап 04 · «Авторитет и масштаб»',period:'Март – Апрель 2027',type:'authority',done:false,approval:true,tasks:[{id:'m04',name:'SEO-закупка: Авторитет и масштаб',sub:'VIP-ссылки и масштабный охват · 30 400 ₽ × 31 проект',date:'Март–Апр 2027',price:'942 400 ₽',priceVal:942400,defaultDone:false,tags:[['mass','Массовая закупка']],details:[['Крауд-ссылки','25 ссылок'],['Статьи','300 ссылок'],['Рекламные статьи','250 ссылок'],['VIP-ссылки','50 шт.'],['Каталоги','+4 000 размещений'],['На 1 проект','625 ссылок + 4 000 каталогов'],['Стоимость за проект','30 400 ₽'],['Проектов','× 31'],['ИТОГО за период','942 400 ₽']]}]},
+  {num:13,title:'Расширение сети поддоменов',period:'Май 2027',type:'net',done:false,approval:true,tasks:[{id:'may27-net',name:'Создание и расширение сети поддоменов по Ленинградской области',sub:'Новые районы и города области — расширение покрытия',date:'Май 2027',price:'—',defaultDone:false,tags:[['net','Сеть поддоменов']]}]},
+  {num:14,title:'Автопостинг · 6 месяцев',period:'Июнь 2027',type:'glue',done:false,approval:true,tasks:[{id:'jun27-auto',name:'Автопостинг на 6 месяцев',sub:'По 4 публикации в месяц',date:'Июнь – Ноябрь 2027',price:'31 200 ₽',priceVal:31200,defaultDone:false,tags:[['auto','Автопостинг']],details:[['Июнь','4 публикации'],['Июль','4 публикации'],['Август','4 публикации'],['Сентябрь','4 публикации'],['Октябрь','4 публикации'],['Ноябрь','4 публикации'],['ИТОГО','24 публикации · 31 200 ₽']]}]},
+  {num:15,title:'Этап 05 · «Региональное доминирование»',period:'Июль – Август 2027',type:'region',done:false,approval:true,tasks:[{id:'m05',name:'SEO-закупка: Региональное доминирование',sub:'Усиление в нишевых площадках · 28 000 ₽ × 31 проект',date:'Июль–Авг 2027',price:'868 000 ₽',priceVal:868000,defaultDone:false,tags:[['mass','Массовая закупка']],details:[['Региональные справочники','80 новых'],['Нишевые статьи','200 ссылок'],['Естественные','100 ссылок'],['Соц. сигналы','1 000 ссылок'],['Ультра-качество','50 премиальных'],['На 1 проект','1 430 ссылок'],['Стоимость за проект','28 000 ₽'],['Проектов','× 31'],['ИТОГО за период','868 000 ₽']]}]},
+  {num:16,title:'Аудит + старт PBN-сеток',period:'Сентябрь 2027',type:'audit',done:false,approval:true,tasks:[{id:'sep27-audit',name:'Аудит проекта и старт PBN-сеток',sub:'Проверка перед PBN-этапом, запуск аренды',date:'Сентябрь 2027',price:'от ~2000–3000$/мес',defaultDone:false,tags:[['audit','Аудит'],['pbn','PBN-сети']],note:'Точные цены формируются ближе к дате. В наркологиях минимум от 2000–3000$/мес. Все ссылки арендные, оплата на год.'}]},
+  {num:17,title:'Закупка ссылок на PBN-сетке',period:'Октябрь 2027',type:'pbn',done:false,approval:true,tasks:[{id:'oct27-pbn',name:'Закупка ссылок на PBN-сетке',sub:'Размещение на сети частных блог-сетей',date:'Октябрь 2027',price:'от ~2000–3000$/мес',defaultDone:false,tags:[['pbn','PBN-сети']],note:'Аренда ссылок, оплата на год. Бюджет уточняется по факту.'}]},
+  {num:18,title:'Этап 06 · «Трастовая крепость»',period:'Ноябрь – Декабрь 2027',type:'trust',done:false,approval:true,tasks:[{id:'m06',name:'SEO-закупка: Трастовая крепость',sub:'Максимальный траст — авторитетные домены · 35 000 ₽ × 31 проект',date:'Нояб–Дек 2027',price:'1 085 000 ₽',priceVal:1085000,defaultDone:false,tags:[['mass','Массовая закупка']],details:[['EDU / GOV / WIKI','150 вечных'],['VIP-ссылки','100 шт.'],['Экспертные статьи','200 ссылок'],['Крауд','50 ссылок'],['Каталоги','+4 000 размещений'],['На 1 проект','500 ссылок + 4 000 каталогов'],['Стоимость за проект','35 000 ₽'],['Проектов','× 31'],['ИТОГО за период','1 085 000 ₽']]}]}
+],
+'2028':[
+  {num:19,title:'Ежемесячная закупка PBN-сеток',period:'Весь 2028 год',type:'pbn',done:false,approval:true,tasks:[{id:'y28-pbn',name:'Ежемесячное размещение на PBN-сетках',sub:'Поддержание и наращивание траста на постоянной основе',date:'Январь – Декабрь 2028',price:'2000–3000$/мес',defaultDone:false,tags:[['pbn','PBN-сети']],note:'Ежемесячная закупка ссылок на PBN-сетках. Бюджет 2000–3000$ в месяц. Все ссылки арендные, оплата на год.'}]}
+]};
+
+const SK='station_life_plan_v7';
+let activeYear='2026';
+function loadState(){try{const r=localStorage.getItem(SK);if(r)return JSON.parse(r);}catch(e){}const st={tasks:{},approved:{}};Object.values(PLAN).flat().forEach(m=>m.tasks.forEach(t=>{st.tasks[t.id]=!!t.defaultDone;}));return st;}
+function saveState(st){try{localStorage.setItem(SK,JSON.stringify(st));}catch(e){}}
+let state=loadState();
+function showToast(msg,type){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+(type||'');setTimeout(()=>{el.className='toast';},4500);}
+async function sendNotifications(month){
+  const now=new Date();const time=now.toLocaleString('ru-RU',{dateStyle:'medium',timeStyle:'short'});
+  const total=month.tasks.filter(t=>typeof t.priceVal==='number').reduce((a,t)=>a+t.priceVal,0);
+  const totalStr=total?total.toLocaleString('ru-RU')+' ₽':'без бюджета';
+  const subject='✅ Согласовано клиентом: '+month.title;
+  const text='✅ Клиент согласовал этап плана\n\n📅 '+month.title+'\n🗓 Период: '+month.period+'\n💰 Стоимость: '+totalStr+'\n⏱ Время: '+time+'\n\n— Станция Жизни';
+  let sent=false;const errors=[];
+  if(NOTIFY.telegram.enabled){try{const r=await fetch('https://api.telegram.org/bot'+NOTIFY.telegram.botToken+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:NOTIFY.telegram.chatId,text})});const d=await r.json();if(d.ok)sent=true;else errors.push('Telegram: '+(d.description||'ошибка'));}catch(e){errors.push('Telegram: сеть');}}
+  if(NOTIFY.email.enabled){try{const r=await fetch(NOTIFY.email.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({subject,message:text})});if(r.ok)sent=true;else errors.push('Email: HTTP '+r.status);}catch(e){errors.push('Email: сеть');}}
+  if(!NOTIFY.telegram.enabled&&!NOTIFY.email.enabled)showToast('Согласовано (уведомления не настроены)','success');
+  else if(sent&&!errors.length)showToast('Согласовано · уведомления отправлены','success');
+  else if(sent)showToast('Согласовано · частично: '+errors.join('; '),'');
+  else showToast('Согласовано, но уведомления не ушли: '+errors.join('; '),'error');
+}
+function render(){
+  const root=document.getElementById('plan-root');root.innerHTML='';
+  Object.keys(PLAN).forEach(yk=>{
+    const wrap=document.createElement('div');wrap.className='year-block'+(yk===activeYear?' active':'');wrap.id='year-'+yk;
+    PLAN[yk].forEach(month=>{
+      const mt=month.tasks;const dc=mt.filter(t=>state.tasks[t.id]).length;
+      let sk,sl;
+      if(month.done||dc===mt.length){sk='done';sl='✓ Выполнено';}
+      else if(dc>0||!!state.approved[month.num]){sk='prog';sl='В работе';}
+      else{sk='plan';sl='Запланировано';}
+      const el=document.createElement('div');el.className='month t-'+month.type+' fi';
+      el.innerHTML='<div class="month-head"><div class="month-num">'+String(month.num).padStart(2,'0')+'</div><div class="month-info"><div class="month-name">'+month.title+'</div><div class="month-period">'+month.period+'</div></div><div class="month-status st-'+sk+'">'+sl+'</div></div><div class="month-body"></div>';
+      const body=el.querySelector('.month-body');
+      mt.forEach(task=>{
+        const isDone=state.tasks[task.id];
+        const t=document.createElement('div');t.className='task'+(isDone?' done':'');
+        const tags=(task.tags||[]).map(x=>'<span class="task-tag tag-'+x[0]+'">'+x[1]+'</span>').join('');
+        t.innerHTML='<div class="task-check" data-task="'+task.id+'">'+(isDone?'✓':'')+'</div><div><div class="task-name">'+task.name+'</div>'+(task.sub?'<div class="task-sub">'+task.sub+'</div>':'')+(tags?'<div class="task-tags">'+tags+'</div>':'')+'</div><div class="task-price">'+task.price+'</div><div class="task-date">'+task.date+'</div>';
+        body.appendChild(t);
+        if(task.details&&task.details.length){const d=document.createElement('div');d.className='details';d.innerHTML='<ul>'+task.details.map(p=>'<li><span class="lbl">'+p[0]+'</span><span class="val">'+p[1]+'</span></li>').join('')+'</ul>';body.appendChild(d);}
+        if(task.note){const isInfo=task.note.indexOf('info|')===0;const txt=isInfo?task.note.slice(5):task.note;const n=document.createElement('div');n.className='note-block'+(isInfo?' info':'');n.innerHTML='<b>'+(isInfo?'Зачем это нужно:':'Примечание:')+'</b> '+txt;body.appendChild(n);}
+      });
+      const prices=mt.map(t=>t.priceVal).filter(v=>typeof v==='number');
+      if(prices.length){const total=prices.reduce((a,b)=>a+b,0);const tot=document.createElement('div');tot.className='month-total';tot.innerHTML='<div>Стоимость периода'+(prices.length>1?'<small>'+prices.length+' позиций</small>':'')+'</div><div class="mt-val">'+total.toLocaleString('ru-RU')+' ₽</div>';body.appendChild(tot);}
+      if(month.approval){
+        const approved=!!state.approved[month.num];
+        const apr=document.createElement('div');apr.className='approval'+(approved?' approved':'');
+        apr.innerHTML='<div class="approval-text">'+(approved?'✓ Согласовано клиентом':'Ожидает согласования клиента')+'<small>'+month.title+' · '+month.period+'</small></div><button class="approval-btn" data-approve="'+month.num+'">'+(approved?'✓ Согласовано':'Согласовать →')+'</button>';
+        body.appendChild(apr);
+      }
+      wrap.appendChild(el);
+    });
+    root.appendChild(wrap);
+  });
+  initObs();bindEvents();
+}
+function bindEvents(){
+  document.querySelectorAll('[data-task]').forEach(el=>{el.addEventListener('click',()=>{const id=el.getAttribute('data-task');state.tasks[id]=!state.tasks[id];saveState(state);render();});});
+  document.querySelectorAll('[data-approve]').forEach(el=>{el.addEventListener('click',async()=>{const num=parseInt(el.getAttribute('data-approve'),10);if(!state.approved[num]){el.disabled=true;el.textContent='Отправка...';const m=Object.values(PLAN).flat().find(x=>x.num===num);await sendNotifications(m);state.approved[num]=true;saveState(state);render();}});});
+}
+document.querySelectorAll('.year-tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.year-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');activeYear=t.getAttribute('data-year');document.querySelectorAll('.year-block').forEach(b=>b.classList.remove('active'));const tg=document.getElementById('year-'+activeYear);if(tg)tg.classList.add('active');window.scrollTo({top:document.querySelector('.section').offsetTop-80,behavior:'smooth'});});});
+function resetAll(){if(!confirm('Сбросить все статусы и согласования?'))return;localStorage.removeItem(SK);state=loadState();render();}
+
+/* DOMAINS */
+(function(){
+  const cities=['агалатово','белоостров','всеволожск','гатчина','зеленогорск','колпино','колтуши','красное-село','кронштадт','кудрово','лескалово','лисий-нос','ломоносов','мурино','новоселье','павловск','парголово','песочный','петергоф','пушкин','репино','рощино','сертолово','сестрорецк','сосново','стрельна','токсово','шлиссельбург','шушары','янино'];
+  const box=document.getElementById('dbox-domains');
+  if(box)box.innerHTML=cities.map(c=>'<a href="https://'+c+'.xn--80amdcbb4ae3ak0czg.xn--p1ai/" target="_blank" rel="noopener">'+c+'.станцияжизни.рф</a>').join('');
+})();
+
+render();
+setTimeout(initObs,100);
+</script>
+</body>
+</html>
